@@ -17,6 +17,7 @@
     "verify": "npm run lint && npm run typecheck && npm run test && npm run check:dashes && npm run build && npm run test:e2e"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0",
     "@fontsource-variable/instrument-sans": "^5.3.0",
     "@radix-ui/react-checkbox": "^1.3.11",
     "@radix-ui/react-dialog": "^1.1.23",
