@@ -1,0 +1,295 @@
+import type { CloseItem, EntryLine, EntityId } from '@/domain/types';
+
+function line(account: string, entity: EntityId, debit: number, credit: number): EntryLine {
+  return { account, entity, debitCents: debit, creditCents: credit };
+}
+
+export const CLOSE_ITEMS: CloseItem[] = [
+  {
+    id: 'BR-1042',
+    entities: ['US'],
+    workflow: 'bank',
+    description: 'Match payout to invoice INV-8831',
+    amountCents: 320_000,
+    currency: 'USD',
+    confidenceBps: 9_800,
+    reversible: true,
+    category: 'standard',
+    agent: 'Accounting agent',
+    evidence: [
+      { kind: 'bank line', title: 'Harbor Bank statement, Sep 29, line 114', detail: 'Payout from Summit Trails Retail, $3,200.00, ref INV8831' },
+      { kind: 'invoice', title: 'INV-8831.pdf', detail: 'Summit Trails Retail, issued Sep 1, $3,200.00, net 30' },
+      { kind: 'prior-month pattern', title: 'Customer payment history', detail: 'Last 6 payments matched invoice references exactly' },
+    ],
+    proposedEntry: [line('1010 Cash, Harbor Bank', 'US', 320_000, 0), line('1200 Accounts receivable', 'US', 0, 320_000)],
+    reasoning:
+      'The payout amount and reference match invoice INV-8831 exactly. This customer has paid the same way for six months. Clearing the receivable is a routine, reversible match.',
+    taskIds: ['US-bank'],
+  },
+  {
+    id: 'BR-1043',
+    entities: ['CA'],
+    workflow: 'bank',
+    description: 'Match deposit to invoice INV-C-2210',
+    amountCents: 1_240_000,
+    currency: 'CAD',
+    confidenceBps: 9_700,
+    reversible: true,
+    category: 'standard',
+    agent: 'Accounting agent',
+    evidence: [
+      { kind: 'bank line', title: 'Maple Trust statement, Sep 30, line 42', detail: 'Deposit from Rideau Outfitters, CA$12,400.00' },
+      { kind: 'invoice', title: 'INV-C-2210.pdf', detail: 'Rideau Outfitters, issued Aug 28, CA$12,400.00' },
+      { kind: 'email', title: 'Remittance advice from Rideau Outfitters', detail: 'Lists INV-C-2210 as paid in full' },
+    ],
+    proposedEntry: [line('1010 Cash, Maple Trust', 'CA', 1_240_000, 0), line('1200 Accounts receivable', 'CA', 0, 1_240_000)],
+    reasoning:
+      'The deposit matches the open invoice amount and the remittance advice names the invoice. Amount and customer both agree, so the match is low risk and reversible.',
+    taskIds: ['CA-bank'],
+  },
+  {
+    id: 'ACR-221',
+    entities: ['US'],
+    workflow: 'accruals',
+    description: 'Accrue unbilled consulting (Ridgeway Partners)',
+    amountCents: 1_800_000,
+    currency: 'USD',
+    confidenceBps: 8_100,
+    reversible: true,
+    category: 'standard',
+    agent: 'Accounting agent',
+    evidence: [
+      { kind: 'contract', title: 'Ridgeway Partners SOW 2026-07.pdf', detail: 'Monthly retainer of $18,000, billed in arrears' },
+      { kind: 'prior-month pattern', title: 'July and August bills', detail: 'Two bills of $18,000.00 each, received on the 6th' },
+      { kind: 'email', title: 'Project lead confirmation', detail: 'Work continued through September, no scope change' },
+    ],
+    proposedEntry: [line('6400 Consulting expense', 'US', 1_800_000, 0), line('2100 Accrued liabilities', 'US', 0, 1_800_000)],
+    reasoning:
+      'Ridgeway bills a fixed retainer in arrears, so September work is not yet invoiced. The amount follows the contract, but the September bill has not arrived, which lowers confidence.',
+    taskIds: ['US-accruals'],
+  },
+  {
+    id: 'IC-310',
+    entities: ['US', 'UK'],
+    workflow: 'intercompany',
+    description: 'Intercompany balance mismatch US vs UK',
+    amountCents: 12_000_000,
+    currency: 'USD',
+    confidenceBps: 9_000,
+    reversible: true,
+    category: 'standard',
+    agent: 'Intercompany agent',
+    evidence: [
+      { kind: 'schedule', title: 'Intercompany balances, Sep 30', detail: 'US receivable from UK $1,270,000; UK payable to US $1,150,000 (converted)' },
+      { kind: 'invoice', title: 'IC-INV-0931.pdf', detail: 'US to UK shared services recharge, $120,000.00, dated Sep 30' },
+      { kind: 'prior-month pattern', title: 'August reconciliation', detail: 'Same recharge booked by UK on the 2nd business day' },
+    ],
+    proposedEntry: [
+      line('6900 Shared services expense', 'UK', 12_000_000, 0),
+      line('2300 Intercompany payable, US', 'UK', 0, 12_000_000),
+    ],
+    reasoning:
+      'The US booked a $120,000 shared services recharge on Sep 30 that the UK has not recorded. Booking the matching payable in the UK clears the difference. The amount is above your materiality limit, so it needs your approval.',
+    taskIds: ['US-intercompany', 'UK-intercompany'],
+  },
+  {
+    id: 'TP-12',
+    entities: ['UK'],
+    workflow: 'intercompany',
+    description: 'Transfer pricing markup on IC-310 services',
+    amountCents: 12_000_000,
+    currency: 'USD',
+    confidenceBps: 7_200,
+    reversible: true,
+    category: 'transfer_pricing',
+    agent: 'Intercompany agent',
+    evidence: [
+      { kind: 'policy', title: 'Northwind transfer pricing policy v3.pdf', detail: 'Shared services charged at cost plus a markup between 5% and 10%' },
+      { kind: 'invoice', title: 'IC-INV-0931.pdf', detail: 'Recharge of $120,000.00 at cost, no markup applied' },
+      { kind: 'email', title: 'Tax advisor note, June', detail: 'Recommends documenting the markup each quarter' },
+    ],
+    proposedEntry: [
+      line('6900 Shared services expense', 'UK', 600_000, 0),
+      line('2300 Intercompany payable, US', 'UK', 0, 600_000),
+    ],
+    reasoning:
+      'The recharge was billed at cost, but policy requires a markup between 5% and 10%. The agent drafted a 5% markup ($6,000) as a starting point. Transfer pricing always goes to an expert.',
+    taskIds: ['UK-intercompany'],
+  },
+  {
+    id: 'FX-77',
+    entities: ['UK'],
+    workflow: 'fx',
+    description: 'Revalue GBP intercompany loan',
+    amountCents: 3_000_000,
+    currency: 'GBP',
+    confidenceBps: 9_600,
+    reversible: true,
+    category: 'standard',
+    agent: 'FX agent',
+    evidence: [
+      { kind: 'schedule', title: 'Loan schedule, UK from US', detail: 'Principal and accrued interest at the Sep 30 rate' },
+      { kind: 'policy', title: 'FX revaluation policy', detail: 'Monetary balances revalued at month-end rate' },
+    ],
+    proposedEntry: [line('7800 Unrealized FX loss', 'UK', 3_000_000, 0), line('2350 Intercompany loan, US', 'UK', 0, 3_000_000)],
+    reasoning:
+      'Month-end revaluation of the intercompany loan at the fixed demo rate. The calculation follows policy and repeats every month.',
+    taskIds: ['UK-fx'],
+  },
+  {
+    id: 'FX-78',
+    entities: ['CA'],
+    workflow: 'fx',
+    description: 'Revalue CAD receivables',
+    amountCents: 6_000_000,
+    currency: 'CAD',
+    confidenceBps: 9_900,
+    reversible: true,
+    category: 'standard',
+    agent: 'FX agent',
+    evidence: [
+      { kind: 'schedule', title: 'CA receivables aging, Sep 30', detail: 'USD-denominated receivables held by the CA entity' },
+      { kind: 'policy', title: 'FX revaluation policy', detail: 'Monetary balances revalued at month-end rate' },
+    ],
+    proposedEntry: [line('1200 Accounts receivable', 'CA', 6_000_000, 0), line('7810 Unrealized FX gain', 'CA', 0, 6_000_000)],
+    reasoning:
+      'The calculation is routine and the agent is confident. The amount is above your materiality limit, so it waits for your approval.',
+    taskIds: ['CA-fx'],
+  },
+  {
+    id: 'PAY-19',
+    entities: ['UK'],
+    workflow: 'payroll',
+    description: 'Accrue September UK payroll taxes',
+    amountCents: 980_000,
+    currency: 'GBP',
+    confidenceBps: 9_500,
+    reversible: true,
+    category: 'standard',
+    agent: 'Payroll agent',
+    evidence: [
+      { kind: 'schedule', title: 'September payroll register (UK)', detail: 'Employer NIC and apprenticeship levy total £9,800.00' },
+      { kind: 'prior-month pattern', title: 'August accrual', detail: '£9,640.00 accrued, settled on Oct 22' },
+    ],
+    proposedEntry: [line('6150 Payroll taxes', 'UK', 980_000, 0), line('2200 Payroll taxes payable', 'UK', 0, 980_000)],
+    reasoning:
+      'The accrual comes straight from the payroll register. Confidence sits exactly at your minimum because one new starter joined mid-month.',
+    taskIds: ['UK-payroll'],
+  },
+  {
+    id: 'DEP-5',
+    entities: ['US'],
+    workflow: 'fixed_assets',
+    description: 'Monthly depreciation, warehouse equipment',
+    amountCents: 4_000_000,
+    currency: 'USD',
+    confidenceBps: 9_900,
+    reversible: true,
+    category: 'standard',
+    agent: 'Accounting agent',
+    evidence: [
+      { kind: 'schedule', title: 'Fixed asset register, warehouse equipment', detail: 'Straight-line, 60 months, $40,000.00 a month' },
+      { kind: 'prior-month pattern', title: 'August depreciation', detail: 'Same amount posted on day 1' },
+    ],
+    proposedEntry: [line('6600 Depreciation expense', 'US', 4_000_000, 0), line('1590 Accumulated depreciation', 'US', 0, 4_000_000)],
+    reasoning:
+      'Straight-line depreciation from the asset register, identical to last month. The amount is exactly equal to your limit, and only amounts strictly below it post automatically.',
+    taskIds: ['US-accruals'],
+  },
+  {
+    id: 'VEN-88',
+    entities: ['US'],
+    workflow: 'ap',
+    description: 'Suspected duplicate bill from Cascade Textiles',
+    amountCents: 745_000,
+    currency: 'USD',
+    confidenceBps: 6_400,
+    reversible: false,
+    irreversibleNote: 'Approving blocks a scheduled payment run, which cannot be undone once the bank file is sent.',
+    category: 'standard',
+    agent: 'AP agent',
+    evidence: [
+      { kind: 'invoice', title: 'CT-5521.pdf', detail: 'Cascade Textiles, $7,450.00, dated Sep 18' },
+      { kind: 'invoice', title: 'CT-5521-A.pdf', detail: 'Cascade Textiles, $7,450.00, dated Sep 19, same PO 4410' },
+      { kind: 'email', title: 'Vendor portal upload log', detail: 'Second file uploaded 22 hours after the first' },
+    ],
+    proposedEntry: [line('2000 Accounts payable', 'US', 745_000, 0), line('6200 Materials expense', 'US', 0, 745_000)],
+    reasoning:
+      'Two bills share the same PO, amount, and line items one day apart. The second has a new invoice number, so it may be a genuine repeat order. Voiding it also stops a payment, so a person must decide.',
+    taskIds: ['US-cutoff'],
+  },
+  {
+    id: 'TAX-3',
+    entities: ['CA'],
+    workflow: 'tax',
+    description: 'GST/HST treatment of cross-border service',
+    amountCents: 500_000,
+    currency: 'CAD',
+    confidenceBps: 8_800,
+    reversible: true,
+    category: 'tax_position',
+    agent: 'Tax agent',
+    evidence: [
+      { kind: 'invoice', title: 'Design services from US parent', detail: 'CA$5,000.00 charged without GST/HST' },
+      { kind: 'policy', title: 'Indirect tax memo 2025', detail: 'Self-assessment may apply to imported services' },
+    ],
+    proposedEntry: [line('1450 GST/HST recoverable', 'CA', 500_000, 0), line('2250 GST/HST self-assessed', 'CA', 0, 500_000)],
+    reasoning:
+      'Imported services can require self-assessment of GST/HST. The treatment depends on how the service is used, which is a tax position, so an expert confirms it.',
+    taskIds: ['CA-cutoff'],
+  },
+  {
+    id: 'BR-1050',
+    entities: ['UK'],
+    workflow: 'bank',
+    description: 'Unidentified deposit',
+    amountCents: 215_000,
+    currency: 'GBP',
+    confidenceBps: 4_200,
+    reversible: true,
+    category: 'standard',
+    agent: 'Accounting agent',
+    evidence: [
+      { kind: 'bank line', title: 'Thames Mutual statement, Sep 30, line 7', detail: 'Deposit £2,150.00, reference "NWO SEPT"' },
+      { kind: 'prior-month pattern', title: 'Open invoices search', detail: 'No open invoice for £2,150.00; three partial matches' },
+    ],
+    proposedEntry: [],
+    reasoning:
+      'No open invoice matches this deposit and the reference is vague. The agent will not guess, so it did not draft an entry. Choose where the cash belongs.',
+    taskIds: ['UK-bank'],
+  },
+];
+
+/** Only exists while the partner agent LedgerLoop RevRec is installed. */
+export const PARTNER_ITEMS: CloseItem[] = [
+  {
+    id: 'REV-606',
+    entities: ['US'],
+    workflow: 'revenue',
+    description: 'Deferred revenue schedule for multi-year contracts',
+    amountCents: 2_200_000,
+    currency: 'USD',
+    confidenceBps: 9_300,
+    reversible: true,
+    category: 'standard',
+    agent: 'LedgerLoop RevRec',
+    partnerAgentId: 'ledgerloop-revrec',
+    evidence: [
+      { kind: 'contract', title: 'Summit Trails 3-year supply agreement.pdf', detail: 'Annual prepayment with a service component' },
+      { kind: 'schedule', title: 'LedgerLoop ASC 606 schedule', detail: 'September release of $22,000.00 from deferred revenue' },
+      { kind: 'policy', title: 'Revenue recognition policy', detail: 'Service revenue recognized ratably' },
+    ],
+    proposedEntry: [line('2400 Deferred revenue', 'US', 2_200_000, 0), line('4100 Service revenue', 'US', 0, 2_200_000)],
+    reasoning:
+      'LedgerLoop built a ratable schedule for the service component of multi-year contracts. September releases $22,000 from deferred revenue.',
+    taskIds: ['US-cutoff'],
+  },
+];
+
+/** Starting template for items where the agent did not draft (low confidence). */
+export const NO_DRAFT_TEMPLATES: Record<string, EntryLine[]> = {
+  'BR-1050': [
+    line('1010 Cash, Thames Mutual', 'UK', 215_000, 0),
+    line('2900 Unapplied receipts (suspense)', 'UK', 0, 215_000),
+  ],
+};

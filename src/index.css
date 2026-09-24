@@ -1,0 +1,111 @@
+@import 'tailwindcss';
+
+:root {
+  --bg: #0d1524;
+  --surface: #131d30;
+  --raised: #1a2740;
+  --hairline: #25354f;
+  --text: #e6edf7;
+  --muted: #8fa3bf;
+  --action: #4c8dff;
+  --lane-auto: #2dd4bf;
+  --lane-assist: #f5b544;
+  --lane-expert: #a78bfa;
+  --lane-manual: #94a3b8;
+  --success: #34d399;
+  --danger: #f87171;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-hairline: var(--hairline);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-action: var(--action);
+  --color-lane-auto: var(--lane-auto);
+  --color-lane-assist: var(--lane-assist);
+  --color-lane-expert: var(--lane-expert);
+  --color-lane-manual: var(--lane-manual);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+
+  --font-sans: 'Instrument Sans Variable', 'Inter Tight', system-ui, sans-serif;
+
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 14px;
+  --text-sm--line-height: 20px;
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+  --text-xl: 20px;
+  --text-xl--line-height: 28px;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 32px;
+  --text-3xl: 32px;
+  --text-3xl--line-height: 40px;
+  --text-4xl: 44px;
+  --text-4xl--line-height: 52px;
+
+  --font-weight-strong: 650;
+
+  --radius-chip: 6px;
+  --radius-panel: 10px;
+  --radius-dialog: 16px;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.tnum,
+table,
+[data-figure] {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--action);
+  outline-offset: 2px;
+}
+
+.prose-measure {
+  max-width: 72ch;
+}
+
+@keyframes ies-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.typing-dot {
+  animation: ies-pulse 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

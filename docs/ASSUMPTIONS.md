@@ -1,0 +1,35 @@
+# Assumptions
+
+Every judgment call made while building the prototype. All data is fictional.
+
+## Data and domain
+
+- Company, people, partners, experts, documents, and bank names are fictional. Bank names (Harbor Bank, Maple Trust, Thames Mutual) and customer names are invented.
+- FX rates are fixed and fictional: 1 CAD = 0.73 USD, 1 GBP = 1.27 USD. They are stored as integers (USD per unit x 10,000) so conversion stays in integer cents; rounding is half away from zero.
+- The demo clock is fixed at 2026-10-02 09:00 (business day 2 of the September 2026 close). New Flight Log entries get timestamps one minute apart after that time so the trail is deterministic.
+- Items in the Autonomous lane are treated as already auto-posted by their agent at the current settings. Changing the Autonomy Dial or guardrails re-plans items that no person has touched yet, so an auto-posted item can move to Assisted when you tighten settings. This keeps the Close board, Control Tower preview, and Flight Log consistent in a simulation.
+- Auto-post Flight Log rows for current items are derived from the live routing plan. When one is reversed it is stored permanently, marked "Reversed", and linked to a new reversal row.
+- A reversed item returns to the Assisted lane so a person decides what happens next.
+- The 15 seeded Flight Log entries describe earlier items (for example BR-1031, ACR-218) that are already closed, so they do not appear on the Close board.
+- Task links: DEP-5 (depreciation) counts toward US Accruals; VEN-88 and REV-606 toward US AP and AR cutoff; TAX-3 toward CA AP and AR cutoff; IC-310 toward both US and UK Intercompany eliminations. Six tasks with no open items were finished on business day 1 (US payroll, US FX, UK accruals, UK cutoff, CA payroll, CA intercompany). Four more are done because their only items are auto-posted, giving 10 of 24 (42%).
+- A task counts as done when all of its linked items are approved, rejected, expert-reviewed, or auto-posted.
+- BR-1050 has no drafted entry (confidence below the floor). "Edit and approve" starts from a suspense-account template the person can change.
+- The TP-12 draft uses a 5% markup ($6,000) as its starting point; the item amount ($120,000) is the base it applies to.
+- "Approve all under $10,000 with confidence 0.90 or higher" only touches Assisted items that already have a balanced draft. At default settings no item qualifies, so the button starts disabled with a tooltip.
+- Installing a partner agent sets its workflow (revenue for LedgerLoop) to L1 by default.
+- Expert costs are the rate for one 30-minute block.
+
+## Developer and business model
+
+- The API key is a fake, deterministic key generated from a seeded PRNG. Nothing is sent anywhere.
+- The "time to first call" timer uses real wall-clock time, because it measures the viewer's own experience. It is the only value that uses the real clock.
+- Earnings estimator: monthly gross = installs x price x usage per install. Usage per install is 1 for monthly subscriptions and an assumed 120 outcomes per month for per-outcome pricing (editable in code).
+- Revenue share: the developer keeps 80% of lifetime gross up to $1,000,000 and 85% above it. Intuit keeps the rest.
+- GMV illustration: N = 8,000 IES customers (assumption), a = 25% adopt at least one partner agent, k = 2 agents each, p = $250 per agent per month. GMV = 8,000 x 0.25 x 2 x $250 x 12 = $12,000,000; Intuit revenue at a 20% take rate = $2,400,000.
+- Earnings history before publish is empty; after publish a seeded 6-month series is shown as a projection labelled as illustrative.
+
+## Build
+
+- React Router v6 data router is used (`createBrowserRouter`). Tailwind CSS v4 via the Vite plugin.
+- Instrument Sans Variable is available on Fontsource, so no fallback font was needed.
+- Toasts appear at the top center so they never collide with the tour panel in the bottom right.
