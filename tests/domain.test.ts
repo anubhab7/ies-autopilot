@@ -306,3 +306,19 @@ describe('close progress', () => {
     expect(progressPercent(done, total)).toBe(pct);
   });
 });
+
+describe('earnings estimate', () => {
+  it('multiplies installs, price, and usage and applies the tier over 12 months', async () => {
+    const { estimateEarnings } = await import('@/domain/revenueShare');
+    const e = estimateEarnings(500, 50, 'per_outcome');
+    expect(e.monthlyGrossCents).toBe(3_000_000);
+    expect(e.firstMonthDeveloperCents).toBe(2_400_000);
+    expect(e.yearGrossCents).toBe(36_000_000);
+    expect(e.yearDeveloperCents).toBe(28_800_000);
+    const big = estimateEarnings(5_000, 100, 'per_outcome');
+    expect(big.monthlyGrossCents).toBe(60_000_000);
+    // Lifetime crosses $1,000,000 in month 2: 80% on the first $1M, 85% after.
+    expect(big.yearDeveloperCents).toBe(80_000_000 + Math.round((720_000_000 - 100_000_000) * 0.85));
+    expect(estimateEarnings(100, 0, 'free').monthlyGrossCents).toBe(0);
+  });
+});

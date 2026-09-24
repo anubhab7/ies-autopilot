@@ -59,6 +59,7 @@ export interface DevState {
   keyVersion: number;
   timerStartedAt: number | null;
   firstCallMs: number | null;
+  apiCalls: number;
   studioVersion: 1 | 2;
   evalVersionRun: 1 | 2 | null;
   submittedForCertification: boolean;
@@ -98,6 +99,7 @@ const INITIAL_DEV: DevState = {
   keyVersion: 0,
   timerStartedAt: null,
   firstCallMs: null,
+  apiCalls: 0,
   studioVersion: 1,
   evalVersionRun: null,
   submittedForCertification: false,
@@ -523,9 +525,11 @@ export const useDemo = create<DemoStore>()(
           }),
         recordApiCall: (success) =>
           set((s) => {
-            if (!success || s.dev.firstCallMs !== null) return {};
-            const started = s.dev.timerStartedAt ?? Date.now();
-            return { dev: { ...s.dev, firstCallMs: Math.max(0, Date.now() - started) } };
+            const dev = { ...s.dev, apiCalls: s.dev.apiCalls + 1 };
+            if (success && dev.firstCallMs === null) {
+              dev.firstCallMs = Math.max(0, Date.now() - (dev.timerStartedAt ?? Date.now()));
+            }
+            return { dev };
           }),
         setStudioVersion: (studioVersion) => set((s) => ({ dev: { ...s.dev, studioVersion } })),
         recordEvalRun: (evalVersionRun) => set((s) => ({ dev: { ...s.dev, evalVersionRun } })),
@@ -571,7 +575,11 @@ export const useDemo = create<DemoStore>()(
         tour: s.tour,
         navCollapsed: s.navCollapsed,
       }),
-      merge: (persisted, current) => ({ ...current, ...seedState(), ...(persisted as Partial<DataState>) }),
+      merge: (persisted, current) => {
+        const seed = seedState();
+        const saved = (persisted ?? {}) as Partial<DataState>;
+        return { ...current, ...seed, ...saved, dev: { ...seed.dev, ...saved.dev } };
+      },
     },
   ),
 );
