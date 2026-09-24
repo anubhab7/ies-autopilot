@@ -269,15 +269,23 @@ describe('close progress', () => {
 
   it('marks a task done when all its items are resolved', () => {
     const at = '2026-10-02T09:01:00';
-    const resolutions = {
-      'ACR-221': { state: 'approved' as const, at, by: 'Maya' },
-    };
-    let tasks = computeTasks(CLOSE_TASKS, buildBoard(CLOSE_ITEMS, DEFAULT_POLICY, DEFAULT_LEVELS, resolutions));
-    expect(tasks.find((t) => t.id === 'US-accruals')?.done).toBe(false);
-    const both = { ...resolutions, 'DEP-5': { state: 'rejected' as const, at, by: 'Maya' } };
+    let tasks = computeTasks(CLOSE_TASKS, buildBoard(CLOSE_ITEMS, DEFAULT_POLICY, DEFAULT_LEVELS, {}));
+    expect(tasks.find((t) => t.id === 'US-intercompany')?.done).toBe(false);
+    const one = { 'IC-310': { state: 'approved' as const, at, by: 'Maya' } };
+    tasks = computeTasks(CLOSE_TASKS, buildBoard(CLOSE_ITEMS, DEFAULT_POLICY, DEFAULT_LEVELS, one));
+    expect(tasks.find((t) => t.id === 'US-intercompany')?.done).toBe(true);
+    expect(tasks.find((t) => t.id === 'UK-intercompany')?.done).toBe(false);
+    const both = { ...one, 'TP-12': { state: 'expert_reviewed' as const, at, by: 'Priya' } };
     tasks = computeTasks(CLOSE_TASKS, buildBoard(CLOSE_ITEMS, DEFAULT_POLICY, DEFAULT_LEVELS, both));
+    expect(tasks.find((t) => t.id === 'UK-intercompany')?.done).toBe(true);
+    expect(closeProgress(tasks).percent).toBe(50);
+  });
+
+  it('approving ACR-221 finishes US accruals (11 of 24, 46%)', () => {
+    const resolutions = { 'ACR-221': { state: 'approved' as const, at: '2026-10-02T09:01:00', by: 'Maya' } };
+    const tasks = computeTasks(CLOSE_TASKS, buildBoard(CLOSE_ITEMS, DEFAULT_POLICY, DEFAULT_LEVELS, resolutions));
     expect(tasks.find((t) => t.id === 'US-accruals')?.done).toBe(true);
-    expect(closeProgress(tasks).percent).toBe(46);
+    expect(closeProgress(tasks)).toEqual({ done: 11, total: 24, percent: 46 });
   });
 
   it('a reversed auto-post reopens its task', () => {

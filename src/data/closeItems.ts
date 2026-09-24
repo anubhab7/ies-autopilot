@@ -194,7 +194,7 @@ export const CLOSE_ITEMS: CloseItem[] = [
     proposedEntry: [line('6600 Depreciation expense', 'US', 4_000_000, 0), line('1590 Accumulated depreciation', 'US', 0, 4_000_000)],
     reasoning:
       'Straight-line depreciation from the asset register, identical to last month. The amount is exactly equal to your limit, and only amounts strictly below it post automatically.',
-    taskIds: ['US-accruals'],
+    taskIds: ['US-review'],
   },
   {
     id: 'VEN-88',
