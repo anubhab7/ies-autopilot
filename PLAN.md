@@ -9,5 +9,5 @@ Tick a phase only when its acceptance criteria pass. Commit after each phase.
 - [x] 5. Developer journey: Hangar onboarding, Explorer, Studio, Publish, Earnings. Acceptance: e2e 10, 11 pass.
 - [x] 6. Story pages and tour: Home, Strategy, Research, Process, guided tour, command palette. Acceptance: e2e 1 passes.
 - [x] 7. Hardening: mobile, accessibility, reduced motion, console-clean, performance, visual polish. Acceptance: e2e 14 to 17 pass, Lighthouse targets met.
-- [ ] 8. Docs and deploy prep: README, docs, screenshots script, vercel.json, .gitignore, .env.example. Acceptance: `npm run verify` passes from a clean install.
+- [x] 8. Docs and deploy prep: README, docs, screenshots script, vercel.json, .gitignore, .env.example. Acceptance: `npm run verify` passes from a clean install.
 - [ ] 9. Optional: live AI mode.
