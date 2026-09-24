@@ -80,8 +80,8 @@ function Step({
         </span>
         <span className="mt-2 w-px flex-1 bg-hairline" aria-hidden />
       </div>
-      <div className={cn('min-w-0 flex-1 pt-1', !active && !done && 'opacity-60')}>
-        <h2 className="text-base font-strong">{title}</h2>
+      <div className="min-w-0 flex-1 pt-1">
+        <h2 className={cn('text-base font-strong', !active && !done && 'text-muted')}>{title}</h2>
         <div className="mt-2">{children}</div>
       </div>
     </li>

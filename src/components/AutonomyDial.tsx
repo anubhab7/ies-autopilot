@@ -108,11 +108,11 @@ export function AutonomyDial({
       <div
         role={interactive ? 'slider' : 'img'}
         tabIndex={interactive ? 0 : undefined}
-        aria-label={label}
+        aria-label={interactive ? label : `${label}: ${value}, ${LEVEL_INFO[value].name}`}
         aria-valuemin={interactive ? 0 : undefined}
         aria-valuemax={interactive ? 3 : undefined}
         aria-valuenow={interactive ? index : undefined}
-        aria-valuetext={`${value}, ${LEVEL_INFO[value].name}`}
+        aria-valuetext={interactive ? `${value}, ${LEVEL_INFO[value].name}` : undefined}
         aria-orientation={interactive ? 'horizontal' : undefined}
         onKeyDown={interactive ? onKeyDown : undefined}
         className={cn('absolute rounded-full', interactive && 'cursor-grab touch-none')}

@@ -276,7 +276,7 @@ export default function ExceptionDetailPage() {
                     <div className="min-w-0 text-sm">
                       <div className="font-medium">{e.title}</div>
                       <div className="text-muted">{e.detail}</div>
-                      <div className="mt-0.5 text-xs capitalize text-muted">{e.kind}</div>
+                      <div className="mt-0.5 text-xs text-muted">{e.kind.charAt(0).toUpperCase() + e.kind.slice(1)}</div>
                     </div>
                   </li>
                 );

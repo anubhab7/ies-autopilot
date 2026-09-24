@@ -1,7 +1,7 @@
 import { expect, laneCounts, progress, test } from './fixtures';
 
 test.describe('finance leader core', () => {
-  test('2: approve ACR-221 advances progress and logs exactly one entry', async ({ page }) => {
+  test('2: approve ACR-221 advances progress and logs exactly one entry @mobile', async ({ page }) => {
     await page.goto('/cfo/close');
     await expect(page.getByTestId('close-progress-value').first()).toHaveText('42%');
     await page.getByTestId('board-row-ACR-221').getByRole('link').click();
@@ -96,7 +96,7 @@ test.describe('finance leader core', () => {
     await expect(page.getByRole('button', { name: 'Reverse IC-305' })).toHaveCount(0);
   });
 
-  test('12: deep links and not-found states', async ({ page }) => {
+  test('12: deep links and not-found states @mobile', async ({ page }) => {
     await page.goto('/cfo/close/IC-310');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Intercompany balance mismatch US vs UK');
     await page.reload();

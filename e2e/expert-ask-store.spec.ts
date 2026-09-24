@@ -33,7 +33,7 @@ test.describe('expert, ask, store', () => {
     expect(await laneCounts(page)).toEqual({ auto: 4, assisted: 6, expert: 2 });
   });
 
-  test('8: Ask Autopilot answers each intent and falls back on gibberish', async ({ page }) => {
+  test('8: Ask Autopilot answers each intent and falls back on gibberish @mobile', async ({ page }) => {
     await page.goto('/cfo/ask');
     const input = page.getByLabel('Your question');
     const send = page.getByTestId('ask-send');
@@ -76,7 +76,7 @@ test.describe('expert, ask, store', () => {
     await expect(page.getByTestId('conversation')).toHaveCount(0);
   });
 
-  test('9: store search, consent, REV-606, uninstall, and uncertified agent', async ({ page }) => {
+  test('9: store search, consent, REV-606, uninstall, and uncertified agent @mobile', async ({ page }) => {
     await page.goto('/cfo/store');
     await page.getByLabel('Search agents').fill('zzz');
     await expect(page.getByTestId('empty-state')).toBeVisible();

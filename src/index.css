@@ -109,3 +109,14 @@ table,
     scroll-behavior: auto !important;
   }
 }
+
+/* Keep absolutely positioned descendants (sr-only captions) inside scroll containers. */
+.overflow-x-auto,
+.overflow-auto {
+  position: relative;
+}
+
+/* Grid items default to min-width: auto, which lets long content push past narrow screens. */
+.grid > * {
+  min-width: 0;
+}

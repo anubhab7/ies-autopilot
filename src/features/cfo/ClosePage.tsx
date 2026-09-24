@@ -156,6 +156,7 @@ export default function ClosePage() {
       disabled={bulkEligible.length === 0}
       onClick={() => setBulkOpen(true)}
       data-testid="bulk-approve"
+      className="h-auto! min-h-10 whitespace-normal! py-2! text-left"
     >
       Approve all under $10,000 with confidence 0.90 or higher
     </Button>
