@@ -283,6 +283,7 @@ export default function AskPage() {
                 type="button"
                 onClick={() => void send(q.text)}
                 className="rounded-chip border border-hairline px-2 py-0.5 text-xs text-muted hover:border-action hover:text-text"
+                data-tour={q.intent === 'revenue_drop' ? 'ask-revenue' : undefined}
               >
                 {q.text}
               </button>

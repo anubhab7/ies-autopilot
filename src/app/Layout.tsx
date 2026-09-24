@@ -320,7 +320,7 @@ export function AppLayout() {
           </DialogPrimitive.Portal>
         </DialogPrimitive.Root>
 
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col" style={{ paddingBottom: 'var(--tour-space, 0px)' }}>
           <TopBar onOpenNav={() => setDrawerOpen(true)} onOpenPalette={() => setPaletteOpen(true)} />
           <main id="main" className="mx-auto w-full max-w-[1280px] flex-1 px-4 py-6 sm:px-6 sm:py-8">
             <Suspense fallback={<RouteFallback />}>
