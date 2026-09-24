@@ -39,7 +39,7 @@ export async function handleAsk(req: AskRequest, env: Record<string, string | un
     return { status: 503, body: { error: 'Live mode is off because ANTHROPIC_API_KEY is not set.' } };
   }
 
-  let question = '';
+  let question: string;
   try {
     const parsed: unknown = JSON.parse(req.body || '{}');
     question = typeof (parsed as { question?: unknown }).question === 'string' ? (parsed as { question: string }).question.trim() : '';
