@@ -6,7 +6,7 @@ Format: black theme, justified body text, no em dashes. Screenshots come from `n
 
 - IES Autopilot
 - Your finance team's AI crew, with a human expert always on call.
-- Prototype: https://ies-autopilot-k314itmue-anubhab7s-projects.vercel.app/ Research: https://ies-autopilot-k314itmue-anubhab7s-projects.vercel.app/research LinkedIn: https://www.linkedin.com/in/anubhab-chakraborty/
+- Prototype: https://ies-autopilot.b26015.workers.dev/ Research: https://ies-autopilot.b26015.workers.dev/research LinkedIn: https://www.linkedin.com/in/anubhab-chakraborty/
 - Screenshot: `01-home.png`
 
 ## 2. The customer problem (D4D framing)
