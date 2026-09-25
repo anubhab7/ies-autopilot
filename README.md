@@ -97,14 +97,6 @@ scripts/             check-dashes.mjs, screenshots.mjs
 docs/                ASSUMPTIONS, RESEARCH, PROMPT_LOG, DECK_OUTLINE, screenshots
 ```
 
-## Deploy to Vercel
-
-1. Push the repo to GitHub and import it in Vercel (framework preset: Vite; build `npm run build`; output `dist`).
-2. `vercel.json` rewrites every non-API path to `index.html`, so deep links like `/cfo/close/IC-310` work on refresh.
-3. Optional: add `ANTHROPIC_API_KEY` (and `ANTHROPIC_MODEL`) as environment variables to enable live AI mode. `GET /api/ask?health=1` returns `{ "ok": true }` only when the key exists.
-
-Or from the CLI: `npx vercel` then `npx vercel --prod`.
-
 ## Disclaimer
 
 Concept prototype by Anubhab Chakraborty for the Intuit PM Intern case. Not affiliated with or endorsed by Intuit. All company, people, partner, and financial data is fictional. No Intuit logos are used.
