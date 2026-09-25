@@ -5,7 +5,7 @@ The full specification lives in `BUILD_PROMPT.md`. Progress lives in `PLAN.md`: 
 ## Hard rules
 
 1. Never use the em dash (U+2014) or the en dash (U+2013) anywhere: UI copy, code comments, markdown, test names, commit messages, JSON data. Use commas, colons, parentheses, or the word "to" for ranges (for example "3 to 5 days"). `npm run check:dashes` scans the repo (excluding node_modules, dist, .git, playwright-report, test-results) and fails if either character is found. It runs inside `npm run verify`.
-2. All company, people, and partner data is fictional. No Intuit logo or any real company logo. Use the text wordmark "IES Autopilot". Every page shows the footer: "Concept prototype by YOUR_NAME for the Intuit PM Intern case. Not affiliated with or endorsed by Intuit. All data is fictional."
+2. All company, people, and partner data is fictional. No Intuit logo or any real company logo. Use the text wordmark "IES Autopilot". Every page shows the footer: "Concept prototype by Anubhab Chakraborty for the Intuit PM Intern case. Not affiliated with or endorsed by Intuit. All data is fictional."
 3. Deterministic demo: fixed demo clock `DEMO_NOW = 2026-10-02T09:00:00` (business day 2 of the September 2026 close). No `Math.random()` in rendered data; use the seeded PRNG in `src/lib/prng.ts`.
 4. Money is stored and computed in integer cents. Ratios (materiality, confidence thresholds, revenue shares) are integer basis points. Format to decimals only at display time.
 5. Accessibility: semantic HTML, visible focus rings, keyboard reachable, aria labels on icon buttons, color never the only signal (lanes have icon plus text label), WCAG AA contrast, respect `prefers-reduced-motion`.

@@ -5,7 +5,7 @@ Your finance team's AI crew, with a human expert always on call.
 A clickable concept prototype for the Intuit PM Intern case: how Intuit Enterprise Suite (IES) evolves from an integrated suite into an AI-native business platform for mid-market companies. A reviewer can finish the guided tour in 10 to 15 minutes.
 
 **Live prototype:** https://ies-autopilot-k314itmue-anubhab7s-projects.vercel.app/
-> Concept prototype by YOUR_NAME for the Intuit PM Intern case. Not affiliated with or endorsed by Intuit. All data is fictional.
+> Concept prototype by Anubhab Chakraborty for the Intuit PM Intern case. Not affiliated with or endorsed by Intuit. All data is fictional.
 
 ![Close Autopilot](docs/screenshots/03-close-autopilot.png)
 
@@ -107,4 +107,4 @@ Or from the CLI: `npx vercel` then `npx vercel --prod`.
 
 ## Disclaimer
 
-Concept prototype by YOUR_NAME for the Intuit PM Intern case. Not affiliated with or endorsed by Intuit. All company, people, partner, and financial data is fictional. No Intuit logos are used.
+Concept prototype by Anubhab Chakraborty for the Intuit PM Intern case. Not affiliated with or endorsed by Intuit. All company, people, partner, and financial data is fictional. No Intuit logos are used.

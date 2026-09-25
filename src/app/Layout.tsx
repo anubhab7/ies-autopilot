@@ -22,7 +22,7 @@ import { useDemo, type Persona } from '@/store/demoStore';
 import { DEV_NAV, FINANCE_NAV, STORY_NAV, type NavItem } from './navigation';
 
 export const FOOTER_TEXT =
-  'Concept prototype by YOUR_NAME for the Intuit PM Intern case. Not affiliated with or endorsed by Intuit. All data is fictional.';
+  'Concept prototype by Anubhab Chakraborty for the Intuit PM Intern case. Not affiliated with or endorsed by Intuit. All data is fictional.';
 
 function Wordmark({ compact = false }: { compact?: boolean }) {
   return (

@@ -7,7 +7,7 @@ Before writing any app code:
 2. Create `CLAUDE.md` in the repo root containing the Hard Rules (Section 2), the design tokens (Section 4), and the test commands (Section 10), so they persist across sessions.
 3. Create `PLAN.md` with a checkbox list of the phases in Section 11. Tick each box when its acceptance criteria pass. Commit to git after every phase with a clear message. If the session is interrupted, the next session will resume from the first unticked phase.
 
-Replace the placeholders `YOUR_NAME`, `YOUR_BIO` (one line), `YOUR_LINKEDIN_URL` wherever they appear with obvious placeholder text that is easy to find and edit later (keep them exactly as written, I will fill them in).
+Replace the placeholders `Anubhab Chakraborty`, `[REPLACE WITH YOUR LINKEDIN URL]` wherever they appear with obvious placeholder text that is easy to find and edit later (keep them exactly as written, I will fill them in).
 
 ---
 
@@ -48,7 +48,7 @@ Replace the placeholders `YOUR_NAME`, `YOUR_BIO` (one line), `YOUR_LINKEDIN_URL`
 ## 2. Hard rules (copy these into CLAUDE.md)
 
 1. **Never use the em dash (U+2014) or the en dash (U+2013) anywhere**: UI copy, code comments, markdown, test names, commit messages, JSON data. Use commas, colons, parentheses, or the word "to" for ranges (for example "3 to 5 days"). A script `npm run check:dashes` must scan the repo (excluding node_modules, dist, .git, playwright-report, test-results) and fail if either character is found. It runs inside `npm run verify`.
-2. All company, people, and partner data is fictional. Do not use Intuit's logo or any real company logo. Use a custom text wordmark "IES Autopilot". Show a small footer on every page: "Concept prototype by YOUR_NAME for the Intuit PM Intern case. Not affiliated with or endorsed by Intuit. All data is fictional."
+2. All company, people, and partner data is fictional. Do not use Intuit's logo or any real company logo. Use a custom text wordmark "IES Autopilot". Show a small footer on every page: "Concept prototype by Anubhab Chakraborty for the Intuit PM Intern case. Not affiliated with or endorsed by Intuit. All data is fictional."
 3. Deterministic demo: a fixed demo clock (`DEMO_NOW = 2026-10-02T09:00:00`, business day 2 of the September 2026 close). No `Math.random()` in rendered data; use a seeded PRNG where variation is needed, so tests are stable.
 4. Money is stored and computed in **integer cents**. Ratios (materiality, confidence thresholds, revenue shares) are compared in **integer basis points** to avoid floating point errors. Only format to decimals at display time.
 5. Accessibility: semantic HTML, visible focus rings, every interactive element reachable by keyboard, aria labels on icon buttons, color is never the only signal (lanes also have an icon and a text label), WCAG AA contrast, respects `prefers-reduced-motion`.
@@ -263,7 +263,7 @@ A floating tour panel (bottom right, draggable is not required) with 12 steps, e
 - `docs/PROMPT_LOG.md`: a template table (Stage, Tool, Prompt, Output used, What I rejected and why) with this build prompt summarized as the Prototype stage entry. Leave clear "Edit me" rows for other stages.
 - `docs/ASSUMPTIONS.md`: every assumption made (fictional data, FX rates, pricing, customer counts, share rates).
 - `docs/DECK_OUTLINE.md`: a 10-slide outline for the separate slide deck (black theme, justified body text, no em dashes). For each slide give a title, 3 to 5 lines of draft content, and which prototype screenshot to use:
-  1. Cover: product name "IES Autopilot", tagline, YOUR_NAME, YOUR_BIO, links to prototype and research.
+  1. Cover: product name "IES Autopilot", tagline, Anubhab Chakraborty, links to prototype and research.
   2. The customer problem in D4D framing (who, trying to, blocked by, how it feels, ideal state in the customer's words) with close benchmark stats.
   3. What IES has today and the gap (agents by function, trust, developer economics) plus competitive landscape.
   4. Vision and 3 strategic pillars.
