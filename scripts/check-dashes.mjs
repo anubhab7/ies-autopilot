@@ -4,7 +4,7 @@ import { join, relative } from 'node:path';
 
 const ROOT = process.cwd();
 const IGNORED = new Set(['node_modules', 'dist', '.git', 'playwright-report', 'test-results', '.vercel']);
-const BINARY = /\.(png|jpe?g|gif|webp|ico|woff2?|ttf|otf|pdf|zip)$/i;
+const BINARY = /\.(png|jpe?g|gif|webp|ico|woff2?|ttf|otf|pdf|zip|pptx)$/i;
 const FORBIDDEN = new RegExp(`[${String.fromCharCode(0x2013)}${String.fromCharCode(0x2014)}]`);
 
 const hits = [];
